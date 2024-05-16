@@ -31,7 +31,7 @@ test.describe('Pulpit tests', () => {
     );
   });
 
-  test.only('successful mobile top-up', async ({ page }) => {
+  test('successful mobile top-up', async ({ page }) => {
     // Arrange
     const url = 'https://demo-bank.vercel.app/';
     const userId = 'aberkiet';
