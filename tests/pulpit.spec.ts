@@ -7,7 +7,7 @@ test.describe('Pulpit tests', () => {
     const userId = 'aberkiet';
     const userPassword = '65754323';
     
-    await page.goto('/')
+    await page.goto('/');
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(userPassword);
     await page.getByTestId('login-button').click();

@@ -6,7 +6,7 @@ test.describe('User login to Demobank',() => {
     //const url = 'https://demo-bank.vercel.app/';
     //await page.goto(url);
     
-    await page.goto('/')
+    await page.goto('/');
 
 });
 
