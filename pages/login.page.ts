@@ -11,4 +11,7 @@ export class LoginPage {
 
   //await page.getByTestId('password-input').fill(userPassword);
   //await page.getByTestId('login-button').click();
+
+  loginError = this.page.getByTestId('error-login-id');
+  passwordError = this.page.getByTestId('error-login-password');
 }
