@@ -4,7 +4,7 @@ import { loginData } from '../Test data/login.data';
 test.describe('Pulpit tests', () => {
   test.beforeEach(async ({ page }) => {
     const userId = loginData.userId;
-    const userPassword = loginData.password;
+    const userPassword = loginData.userpassword;
 
     await page.goto('/');
     await page.getByTestId('login-input').fill(userId);
