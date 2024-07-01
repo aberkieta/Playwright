@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { loginData } from '../Test data/login.data';
 import { LoginPage } from '../pages/login.page';
+import { PulpitPage } from '../pages/puplit.page';
 
 test.describe('Pulpit tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -23,17 +24,15 @@ test.describe('Pulpit tests', () => {
     const expectedTransferReceiver = 'Chuck Demobankowy';
 
     // Act
-    await page.locator('#widget_1_transfer_receiver').selectOption(receiverId);
-    await page.locator('#widget_1_transfer_amount').fill(transferAmount);
-    await page.locator('#widget_1_transfer_title').fill(transferTitle);
-
-    await page.getByRole('button', { name: 'wykonaj' }).click();
-    //await page.locator('#execute_btn').click();
-    await page.getByTestId('close-button').click();
-    //await page.getByRole('link', { name: 'Przelew wykonany! Chuck' }).click();
+    const puplitPage = new PulpitPage(page);
+    await puplitPage.transferReceiver.selectOption(receiverId);
+    await puplitPage.transferAmount.fill(transferAmount);
+    await puplitPage.transferTitle.fill(transferTitle);
+    await puplitPage.transferButton.click();
+    await puplitPage.actionCloseButton.click();
 
     // Assert
-    await expect(page.locator('#show_messages')).toHaveText(
+    await expect(puplitPage.massageText).toHaveText(
       `Przelew wykonany! ${expectedTransferReceiver} - ${transferAmount},00PLN - ${transferTitle}`,
     );
   });
@@ -45,35 +44,34 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Doładowanie wykonane! ${topupAmount},00PLN na numer ${topupReceiver}`;
 
     // Act
-    await page.locator('#widget_1_topup_receiver').selectOption(topupReceiver);
-    await page.locator('#widget_1_topup_amount').fill(topupAmount);
-    await page.locator('#uniform-widget_1_topup_agreement').click();
-    //await page.locator('#uniform-widget_1_topup_agreement span').click();
-    await page.getByRole('button', { name: 'doładuj telefon' }).click();
-    await page.getByTestId('close-button').click();
-    //await expect(page.locator('#show_messages')).toHaveText('Doładowanie wykonane! 100,00PLN na numer 500 xxx xxx' );
+    const puplitPage = new PulpitPage(page);
+    await puplitPage.topupReceiverInput.selectOption(topupReceiver);
+    await puplitPage.topupAmount.fill(topupAmount);
+    await puplitPage.topupAgreementCheckbox.click();
+    await puplitPage.topupExpectedButton.click();
+    await puplitPage.actionCloseButton.click();
 
     // Assert
-    await page.getByRole('link', { name: expectedMessage }).click();
-    //await expect(page.locator('#show_messages')).toHaveText('Brak wiadomości' );
+    await expect(puplitPage.massageText).toHaveText(expectedMessage);
   });
 
   test('correct balance after successful mobile top-up', async ({ page }) => {
     // Arrange
     const topupAmount = '100';
     const topupReceiver = '500 xxx xxx';
-    const initialBalance = await page.locator('#money_value').innerText();
+    const puplitPage = new PulpitPage(page);
+    const initialBalance = await puplitPage.moneyValueText.innerText();
     const expectedBalance = Number(initialBalance) - Number(topupAmount);
 
     // Act
-    await page.locator('#widget_1_topup_receiver').selectOption(topupReceiver);
-    await page.locator('#widget_1_topup_amount').fill(topupAmount);
-    await page.locator('#uniform-widget_1_topup_agreement').click();
-    await page.getByRole('button', { name: 'doładuj telefon' }).click();
-    await page.getByTestId('close-button').click();
-    //await expect(page.locator('#show_messages')).toHaveText('Doładowanie wykonane! 100,00PLN na numer 500 xxx xxx' );
+
+    await puplitPage.topupReceiverInput.selectOption(topupReceiver);
+    await puplitPage.topupAmount.fill(topupAmount);
+    await puplitPage.topupAgreementCheckbox.click();
+    await puplitPage.topupExpectedButton.click();
+    await puplitPage.actionCloseButton.click();
 
     // Assert
-    await expect(page.locator('#money_value')).toHaveText(`${expectedBalance}`);
+    await expect(puplitPage.moneyValueText).toHaveText(`${expectedBalance}`);
   });
 });
