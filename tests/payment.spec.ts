@@ -33,11 +33,14 @@ let paymentPage: PaymentPage;
     const expectedMessage = `Przelew wykonany! ${transferAmount},00PLN dla Jan Nowak`;
 
     // Act
-    await paymentPage.transferReceiverInput.fill(transferReceiver);
-    await paymentPage.transferToInput.fill(transferAccount);
-    await paymentPage.transferAmountInput.fill(transferAmount);
-    await paymentPage.transferButton.click();
-    await paymentPage.actionCloseButton.click();
+
+    await paymentPage.makeTransfer(transferReceiver, transferAccount, transferAmount)
+    
+    // await paymentPage.transferReceiverInput.fill(transferReceiver);
+    // await paymentPage.transferToInput.fill(transferAccount);
+    // await paymentPage.transferAmountInput.fill(transferAmount);
+    // await paymentPage.transferButton.click();
+    // await paymentPage.actionCloseButton.click();
 
     // await page.getByTestId('transfer_receiver').fill(transferReceiver);
     // await page.getByTestId('form_account_to').fill(transferAccount);
